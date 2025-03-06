@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טופס הרשמה</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2, h3, h4 {
+            margin: 5px 0;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input, select, button {
+            width: 80%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>טופס הרשמה</h2>
+        <h3>ערב הוקרה גדוד 710</h3>
+        <h4>6.4.2025</h4>
+
+        <form id="registrationForm">
+            <label>שם פרטי:</label>
+            <input type="text" id="firstName" name="firstName" required pattern="[\u0590-\u05FF\s]+" title="יש להזין אותיות בעברית בלבד">
+
+            <label>שם משפחה:</label>
+            <input type="text" id="lastName" name="lastName" required pattern="[\u0590-\u05FF\s]+" title="יש להזין אותיות בעברית בלבד">
+
+            <label>מס' פלאפון:</label>
+            <input type="text" id="phone" name="phone" required pattern="^\d{3}-\d{7}|\d{10}$" title="יש להזין מספר פלאפון בפורמט תקין">
+
+            <label>פלוגה:</label>
+            <select id="platoon" name="platoon" required>
+                <option value="">בחר פלוגה</option>
+                
+                <option value="מג"ד 710">מג"ד 710</option>
+                <option value="א'">פלוגה א'</option>
+                <option value="ב'">פלוגה ב'</option>
+                <option value="ג'">פלוגה ג'</option>
+                <option value="ד'">פלוגה ד'</option>
+                <option value="צמ"ה">צמ"ה</option>
+                <option value="אג"מ">אג"מ</option>
+                
+                <option value="אחר">אחר</option>
+            </select>
+
+            <label>כמות משתתפים:</label>
+            <select id="participants" name="participants" required>
+                <option value="">בחר כמות</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <p>לאחר לחיצה על כפתור ההרשמה תועבר ל-PayBox לתשלום סמלי של 25 ש"ח למשתתף</p>
+            <button type="submit">הרשמה ותשלום</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("registrationForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // מונע שליחה רגילה של הטופס
+
+            let formData = new FormData(document.getElementById("registrationForm"));
+            let url = "https://script.google.com/macros/s/AKfycbzEvGmOOvPuj5ZydbG47DkfZKyr6VbR3jYrT5SKw1gxGyGlxWHmVCE5TDpaUiLA3IGU0g/exec";
+
+            try {
+                let response = await fetch(url, {
+                    method: "POST",
+                    body: formData
+                });
+
+                let result = await response.text();
+                if (result.includes("Success")) {
+                    alert("ההרשמה בוצעה בהצלחה! תועבר כעת לתשלום.");
+                    document.getElementById("registrationForm").reset();
+                    window.location.href = "https://link.payboxapp.com/uxHn6CbVcqByYQKU8";
+                } else {
+                    alert("אירעה שגיאה בשליחת הנתונים, נסה שוב.");
+                }
+            } catch (error) {
+                alert("אירעה שגיאה בשליחת הנתונים, נסה שוב.");
+            }
+        });
+    </script>
+</body>
+</html>
